@@ -1,6 +1,15 @@
 const tmi = require('tmi.js');
 const robot = require('robotjs');
 
+var leftOn = false;
+var rightOn = false;
+var forwardOn = false;
+var backwardOn = false;
+var sprintOn = false;
+var crouchOn = false;
+var attackOn = false;
+var mineOn = false;
+
 const options = {
     
     options: {
@@ -31,7 +40,7 @@ client.on('connected', (address,port) => {
 
 client.on('chat', (channel, user, message, self) => {
     if ( message === 'hello' ) {
-            client.action('g8t0rboy','Hello' + user.username );
+            client.action('g8t0rboy','Hello ' + user.username + " enjoy the stream!");
 
     }
 });
@@ -42,43 +51,83 @@ client.on('chat', (channel, user, message, self) => {
         client.action('g8t0rboy', 'Jumped!');
     }
 
-    if ( message === 'left' ) {
+    if ( message === 'left' && rightOn === false) {
         robot.keyToggle("a", 'down');
+        leftOn = true;
         client.action('g8t0rboy', 'Leftward!');
     }
+    else if ( leftOn === true ) {
+        robot.keyToggle('a', 'up');
+        leftOn = false;
+        client.action('g8t0rboi', 'Not Leftward!');
+    }
     
-    if ( message === 'right' ) {
+    if ( message === 'right' && leftOn === false) {
         robot.keyToggle("d", 'down');
+        rightOn = true;
         client.action('g8t0rboy', 'Rightward!');
     }
+    else if ( rightOn === true ) {
+        robot.keyToggle('d', 'up');
+        rightOn = false;
+        client.action('g8t0rboy', 'Not Rightward!');
+    }
 
-    if ( message === 'back' ) {
+    if ( message === 'back' && forwardOn === false) {
         robot.keyToggle("s", 'down');
+        backwardOn = true;
         client.action('g8t0rboy', 'Backward!');
     }
+    else if ( backwardOn === true ) {
+        robot.keyToggle('s' , 'up');
+        backwardOn = false;
+        client.action('g8t0rboy', 'Not Backward!');
+    }
 
-    if ( message === 'forward' ) {
-        robot.keyToggle("w", 'down');
-        
-        client.action('g8t0rboy', 'Forward!');
+    if ( message === 'forward' && backwardOn === false) {
+        if ( forwardOn === true ) {
+            robot.keyToggle("w", 'up');
+        }
+        else {
+             robot.keyToggle("w", 'down');
+            forwardOn = true;
+            client.action('g8t0rboy', 'Not Forward!');
+        }
+       
     }
 
 });
 
 client.on('chat', (channel, user, message, self) => {
-    if ( message === 'sprint' ) {
-    robot.keyToggle("shift", 'down');
-    
-    client.action('g8t0rboy', 'Sprint is on!');
+    if ( message === 'sprint' && sprintOn === false) {
+        robot.keyToggle("shift", 'down');
+        sprintOn = true;
+        client.action('g8t0rboy', 'Sprint is on!');
+    }
+     else if (sprintOn === true) {
+        robot.keyToggle('shift', 'up');
+        sprintOn = false;
+        client.action('g8t0rboy', 'Sprint is off!')
     }
 });
 
 client.on('chat', (channel, user, message, self) => {
-    if ( message === 'crouch' ) {
-    robot.keyToggle("control", 'down');
-    
-    client.action('g8t0rboy', 'Crouching!');
+    if ( message === 'crouch' && crouchOn === false) {
+        robot.keyToggle("control", 'down');
+        crouchOn = true;
+        client.action('g8t0rboy', 'Crouching!');
+    }
+    else if ( crouchOn === true ) {
+        robot.keyToggle('control', 'up');
+        crouchOn = false;
+        client.action('g8t0rboy', 'Standing!');
     }
 });
 
+client.on('chat', (channel, user, message, self) => {
+    mess = message.split(' ');
+    if ( mess[0] === 'turn' ) {
+        robot.moveMouseSmooth( mess[1] , mess[2] );
+    }
+});
 
