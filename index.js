@@ -81,7 +81,7 @@ client.on('chat', (channel, user, message, self) => {
     else if ( backwardOn === true ) {
         robot.keyToggle('s' , 'up');
         backwardOn = false;
-        client.action('g8t0rboy', 'Not Backward!');
+        client.action('g8t0rboy', 'Not')
     }
 
     if ( message === 'forward' && backwardOn === false) {
@@ -127,7 +127,8 @@ client.on('chat', (channel, user, message, self) => {
 client.on('chat', (channel, user, message, self) => {
     mess = message.split(' ');
     if ( mess[0] === 'turn' ) {
-        robot.moveMouseSmooth( mess[1] , mess[2] );
+        var mouse = robot.getMousePos();
+        robot.moveMouseSmooth( mouse.x + mess[1] , mouse.y );
     }
 });
 
